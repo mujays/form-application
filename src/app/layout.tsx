@@ -13,8 +13,36 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aktivasi App",
-  description: "Aktivasi pesanan aplikasi",
+  applicationName: "Alunika",
+  title: {
+    default: "Aktivasi Pesanan — Alunika",
+    template: "%s — Alunika",
+  },
+  description:
+    "Aktivasi pesanan aplikasimu di Alunika. Isi form aktivasi, lalu terhubung langsung dengan tim CS kami.",
+  keywords: ["Alunika", "aktivasi", "aktivasi pesanan", "onboarding", "aplikasi"],
+  authors: [{ name: "Alunika" }],
+  creator: "Alunika",
+  publisher: "Alunika",
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
+  },
+  openGraph: {
+    title: "Aktivasi Pesanan — Alunika",
+    description:
+      "Aktivasi pesanan aplikasimu di Alunika. Isi form aktivasi, lalu terhubung langsung dengan tim CS kami.",
+    siteName: "Alunika",
+    locale: "id_ID",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Aktivasi Pesanan — Alunika",
+    description:
+      "Aktivasi pesanan aplikasimu di Alunika. Isi form aktivasi, lalu terhubung langsung dengan tim CS kami.",
+  },
 };
 
 export default function RootLayout({
