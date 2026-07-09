@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Order {
+  id             String   @id @default(cuid())
+  nama           String
+  email          String
+  phone          String
+  jenisPembelian String // "sekali_beli" | "langganan"
+  domain         String   @default("") // subdomain yang dipilih user
+  buktiTransfer  String? // Cloudinary URL (khusus langganan)
+  status         String   @default("baru") // baru | diproses | selesai
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+}
