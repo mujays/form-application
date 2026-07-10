@@ -43,6 +43,7 @@ export default function AdminPage() {
   const [fetched, setFetched] = useState(false);
 
   // Filters
+  const [q, setQ] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -62,6 +63,7 @@ export default function AdminPage() {
         const params = new URLSearchParams();
         params.set("page", String(p));
         params.set("limit", "20");
+        if (q.trim()) params.set("q", q.trim());
         if (dateFrom) params.set("from", dateFrom);
         if (dateTo) params.set("to", dateTo);
         if (statusFilter) params.set("status", statusFilter);
@@ -81,7 +83,7 @@ export default function AdminPage() {
         setLoading(false);
       }
     },
-    [apiKey, dateFrom, dateTo, statusFilter, page],
+    [apiKey, q, dateFrom, dateTo, statusFilter, page],
   );
 
   function startEdit(order: Order) {
@@ -188,6 +190,16 @@ export default function AdminPage() {
         {/* Filters */}
         <div className="mb-6 flex flex-wrap items-end gap-3 rounded-lg border bg-white p-4">
           <div className="flex flex-col gap-1">
+            <Label className="text-xs">Cari</Label>
+            <Input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && fetchOrders(1)}
+              placeholder="Email, no. WA, ID, atau domain"
+              className="h-9 w-64"
+            />
+          </div>
+          <div className="flex flex-col gap-1">
             <Label className="text-xs">Dari</Label>
             <Input
               type="date"
@@ -223,12 +235,13 @@ export default function AdminPage() {
           <Button size="sm" className="h-9" onClick={() => fetchOrders(1)}>
             Filter
           </Button>
-          {(dateFrom || dateTo || statusFilter) && (
+          {(q || dateFrom || dateTo || statusFilter) && (
             <Button
               variant="ghost"
               size="sm"
               className="h-9"
               onClick={() => {
+                setQ("");
                 setDateFrom("");
                 setDateTo("");
                 setStatusFilter("");

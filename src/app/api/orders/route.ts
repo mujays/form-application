@@ -22,8 +22,19 @@ export async function GET(req: NextRequest) {
   const from = url.searchParams.get("from"); // ISO date
   const to = url.searchParams.get("to"); // ISO date
   const statusFilter = url.searchParams.get("status"); // baru | diproses | selesai
+  const q = (url.searchParams.get("q") || "").trim(); // cari email/phone/id/domain
 
   const where: Record<string, unknown> = {};
+
+  if (q) {
+    const contains = { contains: q, mode: "insensitive" as const };
+    where.OR = [
+      { email: contains },
+      { phone: contains },
+      { domain: contains },
+      { id: contains },
+    ];
+  }
 
   if (from || to) {
     const createdAt: Record<string, Date> = {};
