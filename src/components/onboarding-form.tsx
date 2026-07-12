@@ -38,7 +38,7 @@ const rupiah = (n: number) =>
 
 const emailValid = (s: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
 
-export function OnboardingForm() {
+export function OnboardingForm({ slug }: { slug: string }) {
   const [step, setStep] = useState<Step>("form");
   const [nama, setNama] = useState("");
   const [email, setEmail] = useState("");
@@ -107,6 +107,7 @@ export function OnboardingForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          app: slug,
           nama,
           email,
           phone,

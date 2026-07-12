@@ -10,6 +10,13 @@ datasource db {
   provider = "postgresql"
 }
 
+model App {
+  id     String  @id @default(cuid())
+  name   String
+  slug   String  @unique
+  orders Order[]
+}
+
 model Order {
   id             String   @id @default(cuid())
   nama           String
@@ -20,6 +27,8 @@ model Order {
   buktiTransfer  String? // Cloudinary URL (khusus langganan)
   status         String   @default("baru") // baru | diproses | selesai
   notes          String?
+  appId          String? // relasi ke App; null untuk data lama
+  app            App?     @relation(fields: [appId], references: [id])
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now()) @updatedAt
 }

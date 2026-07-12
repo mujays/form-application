@@ -57,6 +57,7 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
       take: limit,
+      include: { app: { select: { name: true, slug: true } } },
     }),
     prisma.order.count({ where }),
   ]);
@@ -111,6 +112,7 @@ export async function PATCH(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    const slug = String(body?.app ?? "").trim();
     const nama = String(body?.nama ?? "").trim();
     const email = String(body?.email ?? "").trim();
     const phone = String(body?.phone ?? "").trim();
@@ -120,6 +122,16 @@ export async function POST(req: NextRequest) {
       .toLowerCase();
     const buktiTransfer =
       typeof body?.buktiTransfer === "string" ? body.buktiTransfer : null;
+
+    // Slug app wajib & harus terdaftar — kalau tidak, 404 (harus sesuai)
+    if (!slug)
+      return NextResponse.json({ error: "App tidak ditemukan." }, { status: 404 });
+    const app = await prisma.app.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+    if (!app)
+      return NextResponse.json({ error: "App tidak ditemukan." }, { status: 404 });
 
     if (!nama || !email || !phone)
       return NextResponse.json(
@@ -143,7 +155,15 @@ export async function POST(req: NextRequest) {
       );
 
     const order = await prisma.order.create({
-      data: { nama, email, phone, domain, jenisPembelian, buktiTransfer },
+      data: {
+        nama,
+        email,
+        phone,
+        domain,
+        jenisPembelian,
+        buktiTransfer,
+        appId: app.id,
+      },
     });
 
     return NextResponse.json({ id: order.id }, { status: 201 });

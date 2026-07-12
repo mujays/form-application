@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,6 +19,7 @@ type Order = {
   status: string;
   notes: string | null;
   createdAt: string;
+  app: { name: string; slug: string } | null;
 };
 
 type Pagination = {
@@ -176,15 +178,22 @@ export default function AdminPage() {
               </span>
             )}
           </h1>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => fetchOrders(page)}
-            disabled={loading}
-          >
-            {loading && <Loader2 className="size-3 animate-spin" />}
-            Refresh
-          </Button>
+          <div className="flex items-center gap-2">
+            <Link href="/admin/apps">
+              <Button variant="ghost" size="sm">
+                Kelola App
+              </Button>
+            </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => fetchOrders(page)}
+              disabled={loading}
+            >
+              {loading && <Loader2 className="size-3 animate-spin" />}
+              Refresh
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
@@ -285,6 +294,16 @@ export default function AdminPage() {
                         </p>
                       )}{" "}
                       <div className="flex flex-wrap gap-2 text-xs">
+                        <span
+                          className={cn(
+                            "rounded px-2 py-0.5",
+                            order.app
+                              ? "bg-indigo-100 text-indigo-700"
+                              : "bg-neutral-100 text-neutral-500",
+                          )}
+                        >
+                          📦 {order.app ? order.app.name : "Tanpa app"}
+                        </span>
                         <span className="rounded bg-neutral-100 px-2 py-0.5 text-neutral-600">
                           {order.jenisPembelian === "langganan"
                             ? "Langganan"
